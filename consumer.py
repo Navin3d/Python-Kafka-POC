@@ -8,14 +8,20 @@ config = {
     "group.id" : "my_check_group"
 }
 consumer = Consumer(config)
-TOPIC = ["navin_check"]
+TOPIC = ["navin_basic_check"]
 
 consumer.subscribe(TOPIC)
 
-while True:
-    data: Message = consumer.poll(1)
-    if data is None: continue
-    if data.error():
-        print(data.error())
-    data: User = User.model_validate_json(data.value())
-    print(f"Key: {data.id} Value: {data.firstName}")
+def basic_consume():
+    while True:
+        data: Message = consumer.poll(1)
+        if data is None: continue
+        if data.error():
+            print(data.error())
+            break
+        data: User = User.model_validate_json(data.value())
+        print(f"Key: {data.id} Value: {data.firstName}")
+
+
+if __name__ == "__main__":
+    basic_consume()
