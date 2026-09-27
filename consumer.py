@@ -14,9 +14,8 @@ consumer.subscribe(TOPIC)
 
 while True:
     data: Message = consumer.poll(1)
-    if data is not None:
-        if data.error():
-            print(data.error())
-        data: User = User.model_validate_json(data.value())
-        print(f"Key: {data.id} Value: {data.firstName}")
-
+    if data is None: continue
+    if data.error():
+        print(data.error())
+    data: User = User.model_validate_json(data.value())
+    print(f"Key: {data.id} Value: {data.firstName}")
