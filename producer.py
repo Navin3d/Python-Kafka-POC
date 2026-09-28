@@ -5,8 +5,13 @@ from contextlib import asynccontextmanager
 from pydantic import TypeAdapter
 
 from models import User
+from user_pb2 import User as UserProto
 
 from confluent_kafka import Producer
+from confluent_kafka.serialization import SerializationContext, MessageField
+from confluent_kafka.schema_registry import SchemaRegistryClient
+from confluent_kafka.schema_registry.protobuf import ProtobufSerializer
+
 from fastapi import FastAPI, Request
 from uvicorn import run
 from pathlib import Path
@@ -17,6 +22,10 @@ config = {
     "client.id": "navin.test.producer"
 }
 producer = Producer(config)
+registry_config = {
+    "url" : "http://localhost:8081"
+}
+schema_registry_client = SchemaRegistryClient(registry_config)
 
 
 @asynccontextmanager
@@ -66,10 +75,21 @@ async def protobuf_publish_kafka(request: Request, page_no: int = 1, page_size: 
     end = start + page_size
     datas: list[User] = request.app.state.data[start:end]
 
+    proto_serializer = ProtobufSerializer(
+        UserProto,
+        schema_registry_client
+    )
+
     TOPIC = "navin_protobuf_check"
 
     for data in datas:
-        producer.produce(TOPIC, data.model_dump_json().encode("utf-8"), str(data.id).encode("utf-8"))
+        producer.produce(
+            TOPIC,
+            proto_serializer(
+                data,
+                SerializationContext(TOPIC, MessageField.value)
+            ),
+            str(data.id).encode("utf-8"))
 
     return {
         "status": "OK",

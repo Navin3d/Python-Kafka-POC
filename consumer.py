@@ -3,6 +3,8 @@ from models import User
 from confluent_kafka import Consumer
 from confluent_kafka.cimpl import Message
 
+from user_pb2 import User as UserProto
+
 config = {
     "bootstrap.servers" : "localhost:9092",
     "group.id" : "my_check_group"

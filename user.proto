@@ -1,0 +1,76 @@
+// user.proto
+syntax = "proto3";
+
+package user;
+
+message Coordinates {
+    double lat = 1;
+    double lng = 2;
+}
+
+message Address {
+    string address = 1;
+    string city = 2;
+    string state = 3;
+    string state_code = 4;
+    string postal_code = 5;
+    Coordinates coordinates = 6;
+    string country = 7;
+}
+
+message Hair {
+    string color = 1;
+    string type = 2;
+}
+
+message Bank {
+    string card_expire = 1;
+    string card_number = 2;
+    string card_type = 3;
+    string currency = 4;
+    string iban = 5;
+}
+
+message Company {
+    string department = 1;
+    string name = 2;
+    string title = 3;
+    Address address = 4;
+}
+
+message Crypto {
+    string coin = 1;
+    string wallet = 2;
+    string network = 3;
+}
+
+message User {
+    int32 id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string maiden_name = 4;
+    int32 age = 5;
+    string gender = 6;
+    string email = 7;
+    string phone = 8;
+    string username = 9;
+    string password = 10;
+    string birth_date = 11;
+    string image = 12;
+    string blood_group = 13;
+    double height = 14;
+    double weight = 15;
+    string eye_color = 16;
+    Hair hair = 17;
+    string ip = 18;
+    Address address = 19;
+    string mac_address = 20;
+    string university = 21;
+    Bank bank = 22;
+    Company company = 23;
+    string ein = 24;
+    string ssn = 25;
+    string user_agent = 26;
+    Crypto crypto = 27;
+    string role = 28;
+}
